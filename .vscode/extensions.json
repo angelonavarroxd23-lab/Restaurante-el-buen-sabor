@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+    "vscjava.vscode-lombok",
+    "angular.ng-template",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

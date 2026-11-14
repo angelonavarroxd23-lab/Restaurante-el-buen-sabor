@@ -1,0 +1,35 @@
+{
+  "name": "Sistema Restaurante (Spring Boot + Angular + MySQL)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/java:1": { "version": "17", "installMaven": "true" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+  "hostRequirements": { "cpus": 2, "memory": "4gb" },
+
+  // 1) genera .env con secretos aleatorios (solo si no existe)  2) construye y levanta los 3 servicios
+  "onCreateCommand": "bash scripts/init-env.sh",
+  "postCreateCommand": "docker compose up -d --build",
+  // al reanudar el codespace, vuelve a levantar los servicios (los datos persisten en el volumen mysql_data)
+  "postStartCommand": "bash scripts/init-env.sh && docker compose up -d",
+
+  "forwardPorts": [4200, 8080, 3306],
+  "portsAttributes": {
+    "4200": { "label": "Aplicación web (Angular + API)", "onAutoForward": "openBrowser" },
+    "8080": { "label": "Backend Spring Boot", "onAutoForward": "notify" },
+    "3306": { "label": "MySQL", "onAutoForward": "silent" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "vscjava.vscode-lombok",
+        "angular.ng-template",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

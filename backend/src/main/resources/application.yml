@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sistema-restaurante
+  datasource:
+    # Todas las credenciales vienen del entorno (ver .env.example). No se guardan en el repositorio.
+    url: ${DB_URL:jdbc:mysql://localhost:3306/restaurante_db?useSSL=false&serverTimezone=America/Lima&allowPublicKeyRetrieval=true}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+jwt:
+  secret: ${JWT_SECRET}            # mínimo 32 caracteres
+  expiration-ms: 900000        # 15 minutos
+  refresh-expiration-ms: 604800000 # 7 días
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  demo-login:
+    # Conserva el acceso de demostración original (contraseñas de práctica en AuthController).
+    enabled: ${DEMO_LOGIN_ENABLED:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true

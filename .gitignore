@@ -1,0 +1,23 @@
+# Secretos / entorno local
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Backend
+backend/target/
+*.class
+*.log
+.idea/
+*.iml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# SO / editor
+.DS_Store
+Thumbs.db
