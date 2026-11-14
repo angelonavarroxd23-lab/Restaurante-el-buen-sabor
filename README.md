@@ -2,7 +2,7 @@
 
 Proyecto desarrollado para el curso **Soluciones Web y Aplicaciones Distribuidas (SIST1402A - UPN)**.
 
-[![Abrir en GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/__OWNER__/__REPO__?quickstart=1)
+[![Abrir en GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/angelonavarroxd23-lab/restaurante-el-buen-sabor?quickstart=1)
 
 ## Tecnologías
 
@@ -66,7 +66,7 @@ Al detener o reanudar el codespace, los servicios vuelven a iniciarse solos (`po
 Requiere Docker con Compose v2.
 
 ```bash
-git clone https://github.com/__OWNER__/__REPO__.git && cd __REPO__
+git clone https://github.com/angelonavarroxd23-lab/restaurante-el-buen-sabor.git && cd restaurante-el-buen-sabor
 bash scripts/init-env.sh        # crea .env con secretos aleatorios (o copie .env.example y edítelo)
 docker compose up -d --build
 # Abrir http://localhost:4200
