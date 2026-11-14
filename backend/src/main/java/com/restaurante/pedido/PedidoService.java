@@ -189,4 +189,17 @@ public class PedidoService {
         }
         return pedidoRepository.save(pedido);
     }
+
+    @Transactional
+    public void eliminar(Long id) {
+        Pedido pedido = obtenerPorId(id);
+        if (pedido.getEstado() != Pedido.EstadoPedido.PAGADO && pedido.getEstado() != Pedido.EstadoPedido.CANCELADO) {
+            Mesa mesa = pedido.getMesa();
+            if (mesa != null) {
+                mesa.setEstado(Mesa.EstadoMesa.DISPONIBLE);
+                mesaRepository.save(mesa);
+            }
+        }
+        pedidoRepository.delete(pedido);
+    }
 }

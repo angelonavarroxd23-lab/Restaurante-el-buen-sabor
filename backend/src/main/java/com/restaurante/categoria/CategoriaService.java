@@ -32,6 +32,9 @@ public class CategoriaService {
         if (categoriaRepository.existsByNombre(categoria.getNombre())) {
             throw new RuntimeException("Ya existe una categoría con el nombre: " + categoria.getNombre());
         }
+        if (categoria.getActiva() == null) {
+            categoria.setActiva(true);
+        }
         return categoriaRepository.save(categoria);
     }
 
@@ -40,7 +43,9 @@ public class CategoriaService {
         Categoria existente = obtenerPorId(id);
         existente.setNombre(datos.getNombre());
         existente.setDescripcion(datos.getDescripcion());
-        existente.setActiva(datos.getActiva());
+        if (datos.getActiva() != null) {
+            existente.setActiva(datos.getActiva());
+        }
         return categoriaRepository.save(existente);
     }
 

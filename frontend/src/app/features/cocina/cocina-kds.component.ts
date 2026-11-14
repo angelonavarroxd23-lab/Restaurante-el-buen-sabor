@@ -13,7 +13,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
-      <!-- Encabezado y Métricas de Cocina -->
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between pb-4 border-b border-slate-200 gap-4">
         <div>
           <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Monitor de Cocina (KDS)</h1>
@@ -21,7 +20,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </div>
 
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <!-- Filtro por Zona -->
           <div class="inline-flex rounded border border-slate-200 bg-slate-100 p-0.5 mr-2">
             <button (click)="zonaFiltro = 'TODAS'"
                     [class]="zonaFiltro === 'TODAS' ? 'bg-white text-slate-900 font-semibold shadow-sm' : 'text-slate-600'"
@@ -48,7 +46,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </div>
       </div>
 
-      <!-- Notificación -->
       <div *ngIf="mensajeAviso" 
            class="mt-4 px-4 py-2.5 rounded border bg-blue-50 border-blue-200 text-blue-900 text-xs font-medium flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -60,10 +57,8 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </button>
       </div>
 
-      <!-- Tablero de 3 Columnas Operativas -->
       <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- COLUMNA 1: PENDIENTES EN COLA -->
         <div class="bg-slate-100/80 border border-slate-200 rounded-lg p-4 flex flex-col min-h-[480px]">
           <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
             <div class="flex items-center space-x-2">
@@ -96,7 +91,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
                 Mesero: <strong class="text-slate-700">{{ p.mesero?.nombre || 'Carlos Mendoza' }}</strong>
               </div>
 
-              <!-- Checklist de Platos -->
               <div class="my-2 py-2 border-y border-slate-100 space-y-1.5 text-xs">
                 <div *ngFor="let d of p.detalles; let idx = index" 
                      (click)="toggleItemCheck(p.id!, idx)"
@@ -133,7 +127,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
           </div>
         </div>
 
-        <!-- COLUMNA 2: EN PREPARACIÓN (FUEGOS) -->
         <div class="bg-slate-100/80 border border-slate-200 rounded-lg p-4 flex flex-col min-h-[480px]">
           <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
             <div class="flex items-center space-x-2">
@@ -163,7 +156,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
                 Mesero: <strong class="text-slate-700">{{ p.mesero?.nombre || 'Carlos Mendoza' }}</strong> &bull; {{ calcularTiempo(p.fechaCreacion) }}
               </div>
 
-              <!-- Checklist de Platos -->
               <div class="my-2 py-2 border-y border-slate-100 space-y-1.5 text-xs">
                 <div *ngFor="let d of p.detalles; let idx = index" 
                      (click)="toggleItemCheck(p.id!, idx)"
@@ -200,7 +192,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
           </div>
         </div>
 
-        <!-- COLUMNA 3: LISTOS PARA RECOGER -->
         <div class="bg-slate-100/80 border border-slate-200 rounded-lg p-4 flex flex-col min-h-[480px]">
           <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
             <div class="flex items-center space-x-2">
@@ -230,7 +221,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
                 Esperando recojo por: <strong class="text-slate-700">{{ p.mesero?.nombre || 'Carlos Mendoza' }}</strong>
               </div>
 
-              <!-- Lista de Platos -->
               <div class="my-2 py-2 border-y border-slate-100 space-y-1 text-xs text-slate-700">
                 <div *ngFor="let d of p.detalles" class="flex justify-between">
                   <span><strong class="font-mono">{{ d.cantidad }}x</strong> {{ d.plato?.nombre }}</span>

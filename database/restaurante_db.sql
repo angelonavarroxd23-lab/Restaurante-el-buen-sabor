@@ -4,7 +4,6 @@ CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE restaurante_db;
 
--- 1. TABLA: usuario
 CREATE TABLE IF NOT EXISTS usuario (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre        VARCHAR(100)    NOT NULL,
@@ -17,7 +16,6 @@ CREATE TABLE IF NOT EXISTS usuario (
     updated_at    DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- 2. TABLA: categoria
 CREATE TABLE IF NOT EXISTS categoria (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre        VARCHAR(100)    NOT NULL UNIQUE,
@@ -26,7 +24,6 @@ CREATE TABLE IF NOT EXISTS categoria (
     created_at    DATETIME        DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- 3. TABLA: plato
 CREATE TABLE IF NOT EXISTS plato (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre        VARCHAR(150)    NOT NULL,
@@ -37,10 +34,9 @@ CREATE TABLE IF NOT EXISTS plato (
     categoria_id  BIGINT          NOT NULL,
     created_at    DATETIME        DEFAULT CURRENT_TIMESTAMP,
     updated_at    DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_plato_categoria FOREIGN KEY (categoria_id) REFERENCES categoria(id)
+    CONSTRAINT fk_plato_categoria FOREIGN KEY (categoria_id) REFERENCES categoria(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 4. TABLA: mesa
 CREATE TABLE IF NOT EXISTS mesa (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
     numero        INT             NOT NULL UNIQUE,
@@ -50,7 +46,6 @@ CREATE TABLE IF NOT EXISTS mesa (
     created_at    DATETIME        DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- 5. TABLA: pedido (Incluye campos de facturación e historial de auditoría de venta)
 CREATE TABLE IF NOT EXISTS pedido (
     id                BIGINT AUTO_INCREMENT PRIMARY KEY,
     mesa_id           BIGINT          NOT NULL,
@@ -65,11 +60,10 @@ CREATE TABLE IF NOT EXISTS pedido (
     metodo_pago       VARCHAR(50)     NULL DEFAULT 'Efectivo',
     fecha_creacion    DATETIME        DEFAULT CURRENT_TIMESTAMP,
     fecha_cierre      DATETIME        NULL,
-    CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES mesa(id),
-    CONSTRAINT fk_pedido_mesero FOREIGN KEY (mesero_id) REFERENCES usuario(id)
+    CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES mesa(id) ON DELETE CASCADE,
+    CONSTRAINT fk_pedido_mesero FOREIGN KEY (mesero_id) REFERENCES usuario(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 6. TABLA: detalle_pedido
 CREATE TABLE IF NOT EXISTS detalle_pedido (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     pedido_id       BIGINT          NOT NULL,
@@ -82,9 +76,6 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
     CONSTRAINT fk_detalle_plato FOREIGN KEY (plato_id) REFERENCES plato(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- =============================================================================
--- DATOS SEMILLA (SEED DATA)
--- =============================================================================
 
 INSERT INTO usuario (nombre, apellido, email, password, rol) VALUES
 ('Admin', 'Sistema', 'admin@elbuensabor.pe', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN'),
@@ -120,7 +111,6 @@ INSERT INTO plato (nombre, descripcion, precio, disponible, categoria_id) VALUES
 ('Pisco Sour Catedral', 'Coctel bandera con pisco quebranta, limón, jarabe de goma y amargo', 22.00, TRUE, 3),
 ('Suspiro a la Limeña', 'Manjar blanco de yemas coronado con merengue al oporto', 15.00, TRUE, 4);
 
--- Pedidos activos y ventas cerradas para auditoría
 INSERT INTO pedido (mesa_id, mesero_id, estado, total, observaciones, tipo_comprobante, serie_numero, cliente_documento, metodo_pago, fecha_creacion, fecha_cierre) VALUES
 (7, 2, 'PENDIENTE',       84.00, 'Lomo saltado término medio, servir entrada primero', NULL, NULL, NULL, NULL, DATE_SUB(NOW(), INTERVAL 4 MINUTE), NULL),
 (9, 2, 'PENDIENTE',      112.00, 'Mesa familiar en terraza, traer vasos con hielo',   NULL, NULL, NULL, NULL, DATE_SUB(NOW(), INTERVAL 7 MINUTE), NULL),
@@ -132,29 +122,21 @@ INSERT INTO pedido (mesa_id, mesero_id, estado, total, observaciones, tipo_compr
 (8, 2, 'PAGADO',          53.00, 'Mesa terraza',                                      'BOLETA',  'B001-000142', 'Cliente General',                     'Efectivo',    DATE_SUB(NOW(), INTERVAL 180 MINUTE), DATE_SUB(NOW(), INTERVAL 135 MINUTE));
 
 INSERT INTO detalle_pedido (pedido_id, plato_id, cantidad, precio_unitario, subtotal, notas) VALUES
--- Pedido 1 (Mesa 7 - PENDIENTE)
 (1, 3, 2, 35.00, 70.00, 'Término medio'),
 (1, 6, 1, 14.00, 14.00, 'Helada'),
--- Pedido 2 (Mesa 9 - PENDIENTE)
 (2, 2, 1, 38.00, 38.00, 'Con rocoto aparte'),
 (2, 5, 1, 42.00, 42.00, 'Bien caliente'),
 (2, 1, 1, 18.00, 18.00, 'Entrada al centro'),
 (2, 6, 1, 14.00, 14.00, 'Sin hielo'),
--- Pedido 3 (Mesa 2 - EN_PREPARACION)
 (3, 4, 2, 28.00, 56.00, 'Sin ají fuerte'),
--- Pedido 4 (Mesa 5 - LISTO)
 (4, 2, 1, 38.00, 38.00, 'Ceviche del día'),
 (4, 8, 1, 15.00, 15.00, 'Para después del fondo'),
--- Pedido 5 (Mesa 3 - ENTREGADO)
 (5, 2, 1, 38.00, 38.00, NULL),
 (5, 7, 1, 22.00, 22.00, NULL),
--- Pedido 6 (Mesa 1 - PAGADO B001-000141)
 (6, 3, 2, 35.00, 70.00, NULL),
 (6, 6, 1, 14.00, 14.00, NULL),
--- Pedido 7 (Mesa 4 - PAGADO F001-000038)
 (7, 5, 2, 42.00, 84.00, NULL),
 (7, 1, 2, 18.00, 36.00, NULL),
 (7, 8, 1, 16.00, 16.00, NULL),
--- Pedido 8 (Mesa 8 - PAGADO B001-000142)
 (8, 2, 1, 38.00, 38.00, NULL),
 (8, 8, 1, 15.00, 15.00, NULL);

@@ -14,7 +14,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
-      <!-- Encabezado -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-5 border-b border-slate-200 gap-4">
         <div>
           <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Caja, Facturación e Historial de Ventas</h1>
@@ -27,7 +26,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </button>
       </div>
 
-      <!-- Indicadores de Auditoría y Caja -->
       <div class="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Ventas Cerradas (Auditoría)</div>
@@ -62,7 +60,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </div>
       </div>
 
-      <!-- Notificación -->
       <div *ngIf="mensajeAviso" 
            class="mt-4 px-4 py-2.5 rounded border bg-blue-50 border-blue-200 text-blue-900 text-xs font-medium flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -74,7 +71,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </button>
       </div>
 
-      <!-- Barra de Pestañas y Filtros de Auditoría -->
       <div class="mt-5 bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div class="flex items-center space-x-1.5 overflow-x-auto">
           <button (click)="estadoFiltro = 'PAGADO'"
@@ -110,7 +106,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
         </div>
       </div>
 
-      <!-- Tabla de Historial de Ventas y Auditoría -->
       <div class="mt-4 bg-white border border-slate-200 rounded-lg shadow-sm overflow-x-auto">
         <table class="w-full text-left border-collapse text-sm">
           <thead>
@@ -175,9 +170,19 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
                         class="text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium px-2.5 py-1 rounded transition-colors">
                   Cobrar
                 </button>
+                <button *ngIf="p.estado !== 'PAGADO' && p.estado !== 'CANCELADO'"
+                        (click)="anularPedido(p)"
+                        class="text-xs bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 font-medium px-2.5 py-1 rounded transition-colors">
+                  Anular
+                </button>
                 <button (click)="pedidoDetalle = p"
                         class="text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-medium px-2.5 py-1 rounded transition-colors">
                   Comprobante
+                </button>
+                <button (click)="eliminarPedido(p)"
+                        title="Eliminar registro"
+                        class="text-xs bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-medium px-2 py-1 rounded transition-colors">
+                  Eliminar
                 </button>
               </td>
             </tr>
@@ -192,7 +197,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
 
     </main>
 
-    <!-- Modal de Cobro desde Caja -->
     <div *ngIf="pedidoPorCobrar" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg border border-slate-200 shadow-lg w-full max-w-md p-6">
         <div class="flex items-center justify-between pb-3 border-b border-slate-200">
@@ -258,7 +262,6 @@ import { Pedido, EstadoPedido } from '../../core/models/pedido.model';
       </div>
     </div>
 
-    <!-- Modal de Ticket / Comprobante de Auditoría -->
     <div *ngIf="pedidoDetalle" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg border border-slate-200 shadow-lg w-full max-w-sm p-6 font-sans">
         <div class="text-center border-b border-dashed border-slate-300 pb-3">
@@ -421,6 +424,26 @@ export class AdminPedidosComponent implements OnInit {
 
   imprimirComprobante(): void {
     window.print();
+  }
+
+  anularPedido(p: Pedido): void {
+    if (!p.id) return;
+    this.pedidoService.actualizarEstado(p.id, 'CANCELADO').subscribe({
+      next: () => {
+        this.cargarPedidos();
+        this.mensajeAviso = `Pedido #${p.id} anulado correctamente y Mesa ${p.mesa?.numero} liberada a DISPONIBLE.`;
+      }
+    });
+  }
+
+  eliminarPedido(p: Pedido): void {
+    if (!p.id) return;
+    this.pedidoService.eliminarPedido(p.id).subscribe({
+      next: () => {
+        this.cargarPedidos();
+        this.mensajeAviso = `Registro de pedido #${p.id} eliminado de la base de datos.`;
+      }
+    });
   }
 
   obtenerClaseBadge(estado: EstadoPedido): string {

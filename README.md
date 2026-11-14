@@ -112,10 +112,23 @@ Si prefiere no usar archivo `.env`, en Codespaces puede definir **Codespaces sec
   exista el codespace (si lo elimina, se pierden).
 - Prueba manual: cree un dato, ejecute `docker compose down && docker compose up -d` y compruebe que sigue ahí.
 
+## Módulos administrativos (CRUD)
+
+La pantalla de administración (`/admin/platos`, componente `AdminPlatosComponent`) reúne **4 pestañas CRUD** conectadas
+a la API: **Platos** (`/api/platos`), **Categorías** (`/api/categorias`), **Mesas** (`/api/mesas`) y **Usuarios**
+(`/api/usuarios`). Las rutas `/admin/categorias`, `/admin/mesas` y `/admin/usuarios` abren la misma pantalla con la
+pestaña correspondiente. La caja (`/admin/pedidos`) permite Cobrar, Comprobante, Anular y Eliminar pedidos
+(`DELETE /api/pedidos/{id}`).
+
+El esquema SQL define `ON DELETE CASCADE` en las claves foráneas (plato→categoría, pedido→mesa/usuario,
+detalle→pedido/plato): **eliminar una categoría, mesa o usuario elimina también los registros que dependen de ella**.
+Estas reglas solo se aplican al crear la base desde cero (volumen `mysql_data` vacío).
+
 ## Notas de seguridad (estado heredado del proyecto)
 
 - El backend emite JWT pero **no lo valida**: `SecurityConfig` permite `/api/**` sin autenticación.
 - `UsuarioController` devuelve el hash de contraseña de los usuarios.
+- El frontend no restringe por rol las rutas de administración (cualquier usuario autenticado puede abrir `/admin/usuarios` por URL).
 - El login acepta contraseñas de demostración fijas además de la real (se controla con `DEMO_LOGIN_ENABLED`).
 - Tailwind y las fuentes se cargan desde CDN, por lo que el navegador necesita Internet.
 

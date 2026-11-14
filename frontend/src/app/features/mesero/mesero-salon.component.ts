@@ -18,7 +18,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
-      <!-- Encabezado y Resumen de Ocupación -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-4 border-b border-slate-200 gap-3">
         <div>
           <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Control de Salón y Comandas</h1>
@@ -46,7 +45,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
         </div>
       </div>
 
-      <!-- Notificación de operación -->
       <div *ngIf="mensajeAviso" 
            class="mt-4 px-4 py-2.5 rounded border bg-blue-50 border-blue-200 text-blue-900 text-xs font-medium flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -58,18 +56,14 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
         </button>
       </div>
 
-      <!-- Layout Principal: Mesas y Carta (7 cols) | Comanda Activa (5 cols) -->
       <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        <!-- COLUMNA IZQUIERDA: Mapa de Mesas + Catálogo de Platos -->
         <div class="lg:col-span-7 space-y-5">
           
-          <!-- Tarjeta de Distribución de Mesas -->
           <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
               <h2 class="text-sm font-bold text-slate-800">Croquis de Mesas del Restaurante</h2>
               
-              <!-- Filtro por Zona -->
               <div class="inline-flex rounded border border-slate-200 bg-slate-100 p-0.5 text-xs">
                 <button (click)="ubicacionFiltro = 'TODAS'"
                         [class]="ubicacionFiltro === 'TODAS' ? 'bg-white text-slate-900 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900'"
@@ -89,7 +83,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
               </div>
             </div>
 
-            <!-- Grid de Mesas -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               <div *ngFor="let m of mesasFiltradas" 
                    (click)="seleccionarMesa(m)"
@@ -130,7 +123,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
             </div>
           </div>
 
-          <!-- Catálogo de Platos para Agregar a la Mesa Seleccionada -->
           <div *ngIf="mesaSeleccionada" class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
               <div>
@@ -144,7 +136,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
               </div>
             </div>
 
-            <!-- Pestañas de Categorías -->
             <div class="flex items-center space-x-1.5 overflow-x-auto pb-2 mb-3 border-b border-slate-100">
               <button (click)="categoriaPlatoFiltro = 'TODAS'"
                       [class]="categoriaPlatoFiltro === 'TODAS' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
@@ -173,7 +164,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
               </button>
             </div>
 
-            <!-- Lista de Platos -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-72 overflow-y-auto pr-1">
               <div *ngFor="let p of platosCatalogoFiltrados" 
                    (click)="agregarPlatoAComanda(p)"
@@ -192,13 +182,11 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
 
         </div>
 
-        <!-- COLUMNA DERECHA: Panel de Comanda Activa -->
         <div class="lg:col-span-5">
           <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm sticky top-20">
             
             <div *ngIf="mesaSeleccionada; else sinMesa">
               
-              <!-- Cabecera de la Mesa Seleccionada -->
               <div class="flex items-start justify-between pb-3 border-b border-slate-200">
                 <div>
                   <div class="flex items-center space-x-2">
@@ -225,7 +213,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                 </div>
               </div>
 
-              <!-- Aviso cuando Cocina marcó el pedido como LISTO -->
               <div *ngIf="pedidoActivo?.estado === 'LISTO'" 
                    class="mt-3 p-3 rounded bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center justify-between">
                 <div class="text-xs">
@@ -238,7 +225,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                 </button>
               </div>
 
-              <!-- Lista de Ítems de la Comanda -->
               <div class="mt-3 divide-y divide-slate-100 max-h-72 overflow-y-auto pr-1">
                 <div *ngFor="let item of itemsComanda; let i = index" class="py-2.5 text-xs">
                   <div class="flex items-center justify-between">
@@ -247,7 +233,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                       <div class="text-slate-400 text-[11px] font-mono">S/ {{ item.precioUnitario | number:'1.2-2' }} c/u</div>
                     </div>
                     
-                    <!-- Botones - / + -->
                     <div class="flex items-center space-x-1.5 mr-3">
                       <button (click)="cambiarCantidad(i, -1)" 
                               class="w-6 h-6 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center">
@@ -265,7 +250,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                     </div>
                   </div>
 
-                  <!-- Nota individual por plato -->
                   <div class="mt-1.5">
                     <input type="text" 
                            [(ngModel)]="item.notas" 
@@ -279,7 +263,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                 </div>
               </div>
 
-              <!-- Observaciones Generales -->
               <div class="mt-3 pt-2 border-t border-slate-100">
                 <label class="block text-[11px] font-semibold text-slate-600 mb-1">Observación General de Mesa / Cocina</label>
                 <input type="text" [(ngModel)]="observacionesComanda" 
@@ -287,7 +270,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                        class="w-full text-xs border border-slate-300 rounded px-2.5 py-1.5 focus:outline-none focus:border-blue-600" />
               </div>
 
-              <!-- Resumen Financiero (Subtotal + IGV 18% + Total) -->
               <div class="mt-4 p-3 bg-slate-50 rounded border border-slate-200 space-y-1 text-xs">
                 <div class="flex justify-between text-slate-500">
                   <span>Op. Gravada (Subtotal):</span>
@@ -303,7 +285,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
                 </div>
               </div>
 
-              <!-- Botones Operativos Principales -->
               <div class="mt-4 space-y-2">
                 <button (click)="guardarYEnviarComanda()" 
                         [disabled]="itemsComanda.length === 0"
@@ -333,7 +314,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
 
             </div>
 
-            <!-- Estado inicial si no hay mesa activa -->
             <ng-template #sinMesa>
               <div class="py-14 text-center text-slate-400">
                 <span class="material-symbols-outlined text-4xl mb-2 text-slate-300">table_restaurant</span>
@@ -349,7 +329,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
 
     </main>
 
-    <!-- Modal de Facturación / Cobro de Mesa -->
     <div *ngIf="mostrarModalCobro && mesaSeleccionada" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg border border-slate-200 shadow-lg w-full max-w-md p-6">
         
@@ -398,7 +377,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
             </select>
           </div>
 
-          <!-- Resumen de Comprobante -->
           <div class="p-3 bg-slate-50 rounded border border-slate-200 space-y-1 mt-2">
             <div class="text-[11px] font-semibold text-slate-700 pb-1 border-b border-slate-200">
               Detalle ({{ itemsComanda.length }} ítems)
@@ -436,7 +414,6 @@ import { DetallePedido, Pedido, EstadoPedido } from '../../core/models/pedido.mo
       </div>
     </div>
 
-    <!-- Modal de Comprobante Emitido (Venta Guardada en Historial y Auditoría) -->
     <div *ngIf="comprobanteEmitido" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg border border-slate-200 shadow-lg w-full max-w-sm p-6">
         <div class="text-center border-b border-dashed border-slate-300 pb-3">
@@ -525,7 +502,6 @@ export class MeseroSalonComponent implements OnInit {
   observacionesComanda = '';
   mensajeAviso = '';
 
-  // Facturación / Cobro
   mostrarModalCobro = false;
   comprobanteEmitido: Pedido | null = null;
   tipoComprobante: 'BOLETA' | 'FACTURA' = 'BOLETA';

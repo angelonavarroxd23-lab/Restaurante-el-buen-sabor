@@ -42,4 +42,8 @@ export class PedidoService {
   actualizarEstado(id: number, estado: EstadoPedido): Observable<Pedido> {
     return this.http.patch<Pedido>(`${this.apiUrl}/${id}/estado?estado=${estado}`, {});
   }
+
+  eliminarPedido(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -11,7 +11,6 @@ import { AuthService } from '../../core/services/auth.service';
   template: `
     <div class="min-h-screen bg-slate-50 flex flex-col justify-between">
       
-      <!-- Barra superior institucional -->
       <header class="bg-slate-900 border-b border-slate-800 text-white py-3 px-6 flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold">
@@ -25,7 +24,6 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="text-xs text-slate-400">UPN 2025</div>
       </header>
 
-      <!-- Tarjeta central de Acceso -->
       <main class="flex-1 flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg shadow-sm p-8">
           
@@ -37,7 +35,6 @@ import { AuthService } from '../../core/services/auth.service';
             <p class="text-sm text-slate-500 mt-1">Ingrese sus credenciales para acceder al sistema</p>
           </div>
 
-          <!-- Mensaje de error si falla -->
           <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded flex items-center space-x-2">
             <span class="material-symbols-outlined text-base">error</span>
             <span>{{ errorMessage }}</span>
@@ -45,7 +42,6 @@ import { AuthService } from '../../core/services/auth.service';
 
           <form (ngSubmit)="onSubmit()" class="space-y-4">
             
-            <!-- Selección de perfil de usuario -->
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">Perfil de Usuario</label>
               <select [(ngModel)]="perfilSeleccionado" 
@@ -91,7 +87,6 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
       </main>
 
-      <!-- Pie institucional -->
       <footer class="bg-white border-t border-slate-200 py-3 px-6 text-center text-xs text-slate-500">
         &copy; 2025 Restaurante El Buen Sabor S.A.C. &bull; Proyecto de Curso - UPN
       </footer>
@@ -130,14 +125,12 @@ export class LoginComponent {
     this.errorMessage = '';
     this.isLoading = true;
 
-    // Intentar login con backend
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.redirigirPorRol(res.rol);
       },
       error: () => {
-        // Autenticación por perfil seleccionado
         this.isLoading = false;
         const nombrePorPerfil: Record<string, string> = {
           'admin@elbuensabor.pe': 'Administrador General',

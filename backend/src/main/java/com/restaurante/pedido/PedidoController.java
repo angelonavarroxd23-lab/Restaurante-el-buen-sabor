@@ -63,4 +63,10 @@ public class PedidoController {
             @RequestParam Pedido.EstadoPedido estado) {
         return ResponseEntity.ok(pedidoService.actualizarEstado(id, estado));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        pedidoService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -32,6 +32,9 @@ public class MesaService {
         if (mesaRepository.existsByNumero(mesa.getNumero())) {
             throw new RuntimeException("Ya existe una mesa con el número: " + mesa.getNumero());
         }
+        if (mesa.getEstado() == null) {
+            mesa.setEstado(Mesa.EstadoMesa.DISPONIBLE);
+        }
         return mesaRepository.save(mesa);
     }
 
@@ -41,7 +44,9 @@ public class MesaService {
         existente.setNumero(datos.getNumero());
         existente.setCapacidad(datos.getCapacidad());
         existente.setUbicacion(datos.getUbicacion());
-        existente.setEstado(datos.getEstado());
+        if (datos.getEstado() != null) {
+            existente.setEstado(datos.getEstado());
+        }
         return mesaRepository.save(existente);
     }
 

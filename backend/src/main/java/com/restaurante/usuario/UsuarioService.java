@@ -35,7 +35,15 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
             throw new RuntimeException("El email ya se encuentra registrado: " + usuario.getEmail());
         }
-        if (usuario.getPassword() != null && !usuario.getPassword().startsWith("$2a$")) {
+        if (usuario.getActivo() == null) {
+            usuario.setActivo(true);
+        }
+        if (usuario.getRol() == null) {
+            usuario.setRol(Usuario.Rol.MESERO);
+        }
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            usuario.setPassword(passwordEncoder.encode("password123"));
+        } else if (!usuario.getPassword().startsWith("$2a$")) {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
         return usuarioRepository.save(usuario);
@@ -47,8 +55,12 @@ public class UsuarioService {
         existente.setNombre(datos.getNombre());
         existente.setApellido(datos.getApellido());
         existente.setEmail(datos.getEmail());
-        existente.setRol(datos.getRol());
-        existente.setActivo(datos.getActivo());
+        if (datos.getRol() != null) {
+            existente.setRol(datos.getRol());
+        }
+        if (datos.getActivo() != null) {
+            existente.setActivo(datos.getActivo());
+        }
 
         if (datos.getPassword() != null && !datos.getPassword().isBlank()) {
             if (!datos.getPassword().startsWith("$2a$")) {

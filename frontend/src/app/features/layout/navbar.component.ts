@@ -12,7 +12,6 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-14">
           
-          <!-- Marca institucional -->
           <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded bg-blue-700 flex items-center justify-center text-white border border-blue-600">
               <span class="material-symbols-outlined text-lg">restaurant</span>
@@ -23,12 +22,11 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </div>
 
-          <!-- Navegación estandarizada -->
           <nav class="flex items-center space-x-1 overflow-x-auto">
             <a routerLink="/admin/platos" 
                routerLinkActive="bg-blue-800 text-white font-medium border-blue-700" 
                class="px-3 py-1.5 rounded text-xs sm:text-sm text-slate-300 hover:text-white hover:bg-slate-800 border border-transparent transition-colors whitespace-nowrap">
-              Carta y Menú
+              Administración
             </a>
             <a routerLink="/mesero/salon" 
                routerLinkActive="bg-blue-800 text-white font-medium border-blue-700" 
@@ -47,7 +45,6 @@ import { AuthService } from '../../core/services/auth.service';
             </a>
           </nav>
 
-          <!-- Usuario activo y cierre de sesión -->
           <div class="flex items-center space-x-3">
             <div class="hidden md:flex flex-col text-right">
               <span class="text-xs font-semibold text-white leading-tight">
